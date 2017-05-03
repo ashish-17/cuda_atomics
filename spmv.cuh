@@ -3,4 +3,5 @@
 #include "spmv_atomic.c"
 #include "spmv_segment.c"
 #include "spmv_design.c"
+#include "atomic_test.c"
 #endif
