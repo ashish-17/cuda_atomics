@@ -14,7 +14,7 @@ mmio.o: mmio.c
 main.o: main.c
 	$(CC) -x cu -arch=sm_30 -I. -dc main.c -o $@
 
-genresult.o: genresult.c spmv_atomic.c spmv_segment.c spmv_design.c atomic_test.c
+genresult.o: genresult.c spmv_atomic.c spmv_segment.c spmv_design.c atomic_test.c matrix_transpose.c
 	$(CC) -x cu -arch=sm_30 -I. -dc genresult.c -o $@
 
 %.o: %.c

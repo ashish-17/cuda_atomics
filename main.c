@@ -19,7 +19,17 @@ void logError(const char * errArg, const char * eMsg){
 	puts("     - design = design implementation");
 }
 
-typedef enum{CMDLN_ARG_NULL, CMDLN_ARG_MAT = 1, CMDLN_ARG_VEC = 2, CMDLN_ARG_ALG = 4, CMDLN_ARG_BLOCK = 8, CMDLN_ARG_BLOCKNUM = 16, CMDLN_ARG_ERR = 32, CMDLN_ARG_DEVICEINFO, CMDLN_ARG_ATOMIC_TEST} CmdLnArg;
+typedef enum{
+	CMDLN_ARG_NULL, 
+	CMDLN_ARG_MAT = 1, 
+	CMDLN_ARG_VEC = 2, 
+	CMDLN_ARG_ALG = 4, 
+	CMDLN_ARG_BLOCK = 8, 
+	CMDLN_ARG_BLOCKNUM = 16, 
+	CMDLN_ARG_ERR = 32, 
+	CMDLN_ARG_DEVICEINFO, 
+	CMDLN_ARG_ATOMIC_TEST,
+	CMDLN_ARG_TRANSPOSE_TEST} CmdLnArg;
 
 CmdLnArg getArgType(const char * argv){
 	if(strcasecmp(argv, "-mat") == 0)
@@ -36,6 +46,8 @@ CmdLnArg getArgType(const char * argv){
 		return CMDLN_ARG_DEVICEINFO;
 	else if(strcasecmp(argv, "-atomicTest") == 0)
 		return CMDLN_ARG_ATOMIC_TEST;
+	else if(strcasecmp(argv, "-transposeTest") == 0)
+		return CMDLN_ARG_TRANSPOSE_TEST;
 	else
 		return CMDLN_ARG_ERR;
 }
@@ -99,9 +111,9 @@ void printDeviceInfo();
 
 int main(int argc, char ** argv){
 	/*if(argc != 11 && argc != 3){
-		logError(NULL, NULL);
-		return 1;
-	}*/
+	  logError(NULL, NULL);
+	  return 1;
+	  }*/
 
 	//This is so that the arguments can be presented in any order with the blocksize defaulting to 1024
 	int cumArgs = CMDLN_ARG_NULL;
@@ -158,6 +170,9 @@ int main(int argc, char ** argv){
 				break;
 			case CMDLN_ARG_ATOMIC_TEST:
 				runAtomicTest(blockNum, blockSize, 5);
+				return 0;
+			case CMDLN_ARG_TRANSPOSE_TEST:
+				runTransposeTest(100);
 				return 0;
 
 			default:

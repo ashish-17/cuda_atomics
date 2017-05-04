@@ -4,4 +4,5 @@
 #include "spmv_segment.c"
 #include "spmv_design.c"
 #include "atomic_test.c"
+#include "matrix_transpose.c"
 #endif
