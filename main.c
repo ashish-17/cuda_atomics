@@ -52,7 +52,7 @@ CmdLnArg getArgType(const char * argv){
 		return CMDLN_ARG_ERR;
 }
 
-typedef enum {ALG_ATOMIC, ALG_SEGMENT, ALG_DESIGN} AlgType;
+typedef enum {ALG_ATOMIC, ALG_SEGMENT, ALG_DESIGN, ALG_ATOMIC_TILED, ALG_ATOMIC_ROW_SORTED, ALG_ATOMIC_RANDOM} AlgType;
 
 int populateAlgType(const char * argv, AlgType * toPop){
 	if(strcasecmp(argv, "atomic") == 0){
@@ -64,13 +64,31 @@ int populateAlgType(const char * argv, AlgType * toPop){
 	}else if(strcasecmp(argv, "design") == 0){
 		*toPop = ALG_DESIGN;
 		return 1;
+	}else if(strcasecmp(argv, "atomicRow") == 0){
+		*toPop = ALG_ATOMIC_ROW_SORTED;
+		return 1;
+	}else if(strcasecmp(argv, "atomicRandom") == 0){
+		*toPop = ALG_ATOMIC_RANDOM;
+		return 1;
+	}else if(strcasecmp(argv, "atomicTiled") == 0){
+		*toPop = ALG_ATOMIC_TILED;
+		return 1;
 	}else return 0;
 }
 
 int doSpmv(MatrixInfo * mat, MatrixInfo * vec, MatrixInfo * res, AlgType how, int blockSize, int blockNum){
 	switch(how){
 		case ALG_ATOMIC:
-			getMulAtomic(mat, vec, res, blockSize, blockNum);
+			getMulAtomic(mat, vec, res, blockSize, blockNum, 0);
+			return 1;
+		case ALG_ATOMIC_TILED:
+			getMulAtomic(mat, vec, res, blockSize, blockNum, 1);
+			return 1;
+		case ALG_ATOMIC_ROW_SORTED:
+			getMulAtomic(mat, vec, res, blockSize, blockNum, 2);
+			return 1;
+		case ALG_ATOMIC_RANDOM:
+			getMulAtomic(mat, vec, res, blockSize, blockNum, 3);
 			return 1;
 		case ALG_SEGMENT:
 			getMulScan(mat, vec, res, blockSize, blockNum);

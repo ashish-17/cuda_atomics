@@ -15,6 +15,12 @@
 #define MM_MAX_TOKEN_LENGTH 64
 
 #include <stdio.h>
+typedef struct matrixData {
+	int rIndex;
+	int cIndex;
+	float val;
+} mat_t;
+
 typedef char MM_typecode[4];
 
 char *mm_typecode_to_str(MM_typecode matcode);

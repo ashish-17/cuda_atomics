@@ -105,18 +105,12 @@ __global__ void putProduct_kernel(const int nz, const int *rIndex, const int *cI
 	}
 }
 
-typedef struct matrixData {
-	int rIndex;
-	int cIndex;
-	float val;
-} mat_t;
-
 static inline int matComparator(void* a, void*b) {
 	return (((mat_t*)a)->rIndex - ((mat_t*)b)->rIndex);
 }
 
-void sort_matrix(MatrixInfo *mat) {
-	printf("Sorting the matrix rowwise..\n");
+void sort_matrix(MatrixInfo *mat, int (*comparator) (void*, void*)) {
+	printf("Sorting the matrix..\n");
 	mat_t *mem = (mat_t*)malloc(sizeof(mat_t)*mat->nz);
 	for (int i = 0; i < mat->nz; ++i) {
 		mem[i].rIndex = mat->rIndex[i];
@@ -124,7 +118,7 @@ void sort_matrix(MatrixInfo *mat) {
 		mem[i].val = mat->val[i];
 	}
 
-	mergeSortSeq(mem, sizeof(mat_t), mat->nz, matComparator);
+	mergeSortSeq(mem, sizeof(mat_t), mat->nz, comparator);
 
 	// Verify sort
 	/*printf("Verifying sort\n");
@@ -146,7 +140,7 @@ void sort_matrix(MatrixInfo *mat) {
 void getMulScan(MatrixInfo * mat, MatrixInfo * vec, MatrixInfo * res, int blockSize, int blockNum){
 	/*Allocate here...*/
 
-	sort_matrix(mat);
+	sort_matrix(mat, matComparator);
 
 	int *d_cIndex, *d_rIndex;
 	float *d_val, *d_vec, *d_res;
