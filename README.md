@@ -6,7 +6,9 @@ In some previous projects - sparse matrix vector multiplication (spmv), we found
 The goal of this project to to build an understanding of the performance of cuda atomic operations while varying other factors like storage schemes, sparsity pattern etc. and determine why the results are the way they are, and then repeating the cycle until we’re out of surprises. 
 
 Proposed Solutions and Experiments -
+https://docs.google.com/a/scarletmail.rutgers.edu/presentation/d/124rTgJRAVXuKw5T0yTXni5f8zLgltsJYhEpWTxiaFcQ/edit?usp=sharing
 
+How to run various experiments - 
 ./spmv -mat test_data/cant.mtx -ivec test_data/cant.vec -alg atomic -blockNum 128 -blockSize 8
 ./spmv -mat test_data/cant.mtx -ivec test_data/cant.vec -alg atomicRow -blockNum 128 -blockSize 8
 ./spmv -mat test_data/cant.mtx -ivec test_data/cant.vec -alg atomicRandom -blockNum 128 -blockSize 8
