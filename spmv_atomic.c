@@ -82,23 +82,30 @@ void getMulAtomic(MatrixInfo * mat, MatrixInfo * vec, MatrixInfo * res, int bloc
 
 	if (mode == 1) { // tilling
 		printf("\nStart tiling for %d x %d matrix with %d nz\n", mat->M, mat->N, mat->nz);
+
+		sort_matrix(mat, matComparatorRowOrder);
+
 		int* tmp_rIndex = (int*)malloc(sizeof(int) * mat->nz);
 		int* tmp_cIndex = (int*)malloc(sizeof(int) * mat->nz);
 		float* tmp_val = (float*)malloc(sizeof(float) * mat->nz);
 		int count = 0;
-
-		for (int x = TILE_SIZE; x < mat->M + TILE_SIZE; x += TILE_SIZE) {
-			for (int y = TILE_SIZE; y < mat->N + TILE_SIZE; y += TILE_SIZE) { 
-				for (int i = 0; i < mat->nz; ++i) {
+		int last1 = 0, last2 = 0;
+		for (int x = TILE_SIZE; x < mat->M + TILE_SIZE && count != mat->nz; x += TILE_SIZE) {
+			for (int y = TILE_SIZE; y < mat->N + TILE_SIZE && count != mat->nz; y += TILE_SIZE) { 
+				for (int i = last1; i < mat->nz && count != mat->nz; ++i) {
 					if (mat->cIndex[i] < y && mat->rIndex[i] < x && mat->cIndex[i] >= (y-TILE_SIZE) && mat->rIndex[i] >= (x - TILE_SIZE)) {
 						tmp_rIndex[count] = mat->rIndex[i];
 						tmp_cIndex[count] = mat->cIndex[i];
 						tmp_val[count] = mat->val[i];
 						count++;
+					} else if (mat->rIndex[i] > x) {
+						last2 = i;
+						break;
 					}
 				}
 			}
-			printf("\n%d - %d", x, count);
+			last1 = last2;
+			//printf("\n%d - %d", x, count);
 		}
 
 		memcpy(mat->cIndex, tmp_cIndex, sizeof(int)*mat->nz);
